@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminNewsController extends Controller
 {
@@ -18,9 +19,11 @@ class AdminNewsController extends Controller
     }
     public function formAdd () { //affichage de mon formulaire
 
-        return view ('adminnews.add') ;
+        return view ('adminnews.edit') ;
 
     }
+
+
     public function add (Request $request) {//ajout des informations
 
         $newsModel = new News ; // Création d'une instance de class (model News) ; pour enregistrer en base
@@ -47,14 +50,57 @@ class AdminNewsController extends Controller
 
     }
 
-    public function delete($id = 0){
+    public function formEdit ($id = 0) { //affichage de mon formulaire
 
-        $actu = News::find($id) ; //Récupération d'une news à partir de son id
+        $actu = News::findOrFail($id) ; //Lecture des données en bases à partir de l'identifiant
 
-        dd($id) ;
+        return view ('adminnews.edit',compact('actu')) ;
 
-        return 'delete' ;
+
 
     }
+
+    public function edit(Request $request ,$id =0){
+
+        $actu = News::findOrFail($id) ; //Création d'une instance de class(model News a modifier à partir de id) pour enregistrer en base
+        $request->validate(['titre'=>'required|min:5']);
+
+        if ($request->file()) {
+
+            if ($actu->image != '') {
+                Storage::delete($actu->image) ;
+            }
+
+            $fileName = $request->image->store('public/images') ;
+            $actu->image = $fileName ;
+
+        }
+
+        $actu->titre = $request->titre ;
+        $actu->description = $request->description ;
+        $actu->save();
+
+        return redirect(route('news.liste')) ;
+    }
+
+    public function delete($id = 0){
+
+        $actu = News::findOrFail($id) ; //Récupération d'une news à partir de son id
+        //supression de la news
+        if($actu->image != ''){//verification de l'existence du fichier
+
+        Storage::delete($actu->image) ; //delete file
+
+        }
+        $actu->delete() ; //supprimer l'image dans la base de donnée
+
+
+        return redirect(route('news.liste')) ;
+
+    }
+
+
+
+
 
 }

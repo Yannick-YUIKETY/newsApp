@@ -1,4 +1,4 @@
-<form action="{{ route('news.add') }}" method="post" enctype="multipart/form-data">
+<form action="{{!empty($actu)? route('news.edit',$actu->id):route('news.add')}}" method="post" enctype="multipart/form-data">
     <!-- enctype pour envoyer des fichiers-->
     @csrf
 
@@ -8,7 +8,10 @@
             Titre
         </label>
 
-        <input type="text" name="titre" placeholder="Saisissez un titre"
+        <input type="text"
+        name="titre"
+        value ="{{!empty($actu)?$actu->titre:''}}"
+         placeholder="Saisissez un titre"
             class="w-full rounded-md border border-orange-600 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-purple-700 focus:shadow-md " />
         @error('titre')
             <div class="text-red-500">Vous devez saisir un titre !</div>
@@ -22,7 +25,19 @@
             Image
         </label>
 
-        <input type="file" name="image" placeholder="Insérer une image"
+        @isset($actu)
+            <img
+            class="h-20 w-20 rounded-full object-cover object-center p-2"
+            src="{{Storage::url($actu->image)}}"
+            alt=""
+            />
+        @endisset
+
+
+        <input
+        type="file"
+        name="image"
+        placeholder="Insérer une image"
             class="w-full rounded-md border border-orange-600 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-purple-700 focus:shadow-md " />
         @error('image')
             <div class="text-red-500">Ajoutez une image au bon format !</div>
@@ -35,9 +50,15 @@
             Description
         </label>
 
-        <textarea name="description" rows="4" placeholder="Saisissez une description"
+        <textarea
+        name="description"
+        rows="4"
+        placeholder="Saisissez une description"
+
             class="w-full rounded-md border border-orange-600 bg-white py-3 px-6 h-48 text-base font-medium text-black outline-none focus:border-purple-700 focus:shadow-md ">
+            {{!empty($actu)?$actu->description:''}}
         </textarea>
+
         @error('description')
             <div class="text-red-500">Ajoutez une description !</div>
         @enderror
@@ -45,7 +66,7 @@
     </div>
 
     <div class="mb-5">
-        <button class="bg-orange-600 px-8 py-3 text-white rounded-md font-bold">Ajouter</button>
+        <button class="bg-orange-600 px-8 py-3 text-white rounded-md font-bold">{{!empty($actu)?'Modifier' :'Ajouter'}}</button>
     </div>
 
 

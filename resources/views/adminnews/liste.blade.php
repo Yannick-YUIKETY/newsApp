@@ -61,7 +61,7 @@
                                         />
                                       </svg>
                                     </a>
-                                    <a x-data="{ tooltip: 'Edite' }" href="#">
+                                    <a  href="{{route('news.edit',$itemActu->id)}}">
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
