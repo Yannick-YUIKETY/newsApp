@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,7 +20,9 @@ class AdminNewsController extends Controller
     }
     public function formAdd () { //affichage de mon formulaire
 
-        return view ('adminnews.edit') ;
+        $categories = Category::orderBy('name','asc')->get();
+
+        return view ('adminnews.edit', compact('categories')) ;
 
     }
 
@@ -39,6 +42,9 @@ class AdminNewsController extends Controller
 
         }
 
+        $newsModel->category_id = $request->category ;
+        $newsModel->description = $request->description ;
+
         $newsModel->titre = $request->titre ;
 
         $newsModel->description = $request->description ;
@@ -53,8 +59,8 @@ class AdminNewsController extends Controller
     public function formEdit ($id = 0) { //affichage de mon formulaire
 
         $actu = News::findOrFail($id) ; //Lecture des données en bases à partir de l'identifiant
-
-        return view ('adminnews.edit',compact('actu')) ;
+        $categories = Category::orderBy('name','asc')->get(); //classer les categoeies par ordre croissant
+        return view ('adminnews.edit',compact('actu','categories')) ;
 
 
 
@@ -75,7 +81,7 @@ class AdminNewsController extends Controller
             $actu->image = $fileName ;
 
         }
-
+        $actu->category_id = $request->category ;
         $actu->titre = $request->titre ;
         $actu->description = $request->description ;
         $actu->save();

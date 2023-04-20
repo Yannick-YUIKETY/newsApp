@@ -21,6 +21,32 @@
 
     <div class="mb-5">
 
+    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
+
+        <select name="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option selected>Choose a category</option>
+            @foreach ($categories as $itemCategory )
+
+                @if (!empty($actu) && $itemCategory->id == $actu->category_id)
+
+                    <option value="{{$itemCategory->id}}"selected>{{$itemCategory->name}}</option>
+
+                @else
+
+                <option value="{{$itemCategory->id}}">{{$itemCategory->name}}</option>
+
+                @endif
+
+
+
+            @endforeach
+
+        </select>
+
+    </div>
+
+    <div class="mb-5">
+
         <label for="image" class="mb-3 block text-base font-medium text-white">
             Image
         </label>
