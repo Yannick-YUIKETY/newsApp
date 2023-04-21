@@ -25,8 +25,10 @@ Route::get('/', function () {
 /***********Affichage des news pour le client  */
 
 Route::get('/newsstandard',[NewsStandardController::class , 'index'])->name('news.standard');
+
 Route::get('/newsstandard/{actu}',[NewsStandardController::class , 'detail'])->name('news.standard.detail');
 
+Route::get('/newsstandard/category/{id}',[NewsStandardController::class , 'index'])->name('news.standard.category');
 
 /*********** FIN Affichage des news pour le client  */
 
@@ -51,9 +53,9 @@ Route::middleware('auth')->group(function () { // sécurise un groupe d'info
 
 /*Route sécurisée pour la gestion des News */
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','can:admin'])->group(function () { //'can:admin' pour un groupe
 
-   Route::get('admin/news/add', [AdminNewsController::class , 'formAdd'])->name('news.add');//get affiche les infos
+   Route::get('admin/news/add', [AdminNewsController::class , 'formAdd'])->name('news.add');//get affiche les infos //->can('admin') pour un seul admin
    Route::post('admin/news/add', [AdminNewsController::class , 'add'])->name('news.add');//post pour receptionner les infos
 
    Route::get('admin/news/edit/{id}', [AdminNewsController::class , 'formEdit'])->name('news.edit'); //envoyer les données sur le formulaire

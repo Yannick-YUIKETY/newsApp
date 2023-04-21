@@ -86,6 +86,7 @@
 
 
                             @endforelse
+                            {{$actus->links()}}
 
                             <!--Fin boucle -->
                         </tbody>
